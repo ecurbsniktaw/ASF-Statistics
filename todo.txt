@@ -7,6 +7,9 @@ To Do for ASF Stats
 
 Changes for next Version:
 
+- When downloading a spreadsheet, if it has been filtered (e.g. stories
+  for just one author are being displayed) download just the filtered rows.
+
 - Change the stacked bar chart to a line plot (?)
 
 - Add 1st, last year to heading of plot of stories by one author.
