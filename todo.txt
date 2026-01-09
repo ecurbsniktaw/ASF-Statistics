@@ -1,1 +1,98 @@
 To Do for ASF Stats
+===================
+
+- Deploy 1st version
+  - Push current code to github
+  - Test the deployed version
+
+Changes for next Version:
+
+- Change the stacked bar chart to a line plot (?)
+
+- Add 1st, last year to heading of plot of stories by one author.
+
+- Consider adding a new display: yr/mo of first appearance
+  of each author (and last?)
+
+- In Author Totals table, make the columns more narrow.
+
+- In Authors by month table, make the author column wider.
+
+- Implement the select authors option.
+
+DONE
+====
+
+√ Read the two csv files from urls instead of from local files
+  (and instead of using AWS storage).
+
+√ pen names to process:
+	Will F. Jenkins = Murray Leinster
+	long list of SF pen names:
+	https://en.wikipedia.org/wiki/List_of_science-fiction_authors
+	this might be a larger list:
+	http://www.scifi.darkroastedblend.com/2007/08/authors-pseudonyms.html
+	The routine that creates the allStories csv (and handles pen names):
+
+√ In csv dl: author counts needs to be sorted desc on count
+  (same for counts by author/year)
+  Maybe stop telling DataTables to sort the data, and just
+  sort it while still as a dataframe?
+
+√ Provide download button for tables.
+
+√ For plot by year, one author:
+  √ Make all years appear, including when there are zero stories
+  √ When no author has been chosen, display a help message.
+  √ Eliminate the duplicates in the list: should just
+  	be a list of the unique author names (right now has
+  	one item for every story)
+  √ Ask for the author to use
+    √ Show full list as a drop down menu?
+  √ Provide a button for downloading the plot to a PDF file
+
+√ Implement top 20 authors.
+
+√ When page first appears, show the full list (before any option
+  is chosen).
+
+√ Add a title with stats: # stories, # authors, # issues
+
+√ Implement by year, one author.
+
+√ Try (again) generating the pivot table from the all-stories
+  table, instead of reading the pivot csv file. 
+  => Didn't work... leaving it as is (reading the file)
+
+√ Implement stacked bar chart.
+
+√ First version: local only
+	√ Read the csv from a local file
+	√ Extract some/all of the analysis code used in the earlier project.
+	√ In the left-side panel, drop down menu:
+		- Table: Full listing
+		- Table: Author counts
+		- Table: Author pivot
+		- Plot: Stacked bar chart
+		- Plot: By Year, 1 Author
+		- Plot: Select authors
+		- Plot: Top 20 by year
+	√ Make the tables sortable and searchable
+
+AWS Storage Info
+================
+- Find out how to read in an external csv file from a python script.
+	. I created an AWS S3 bucket named sf-data-files-2026 and uploaded
+	  the astounding_contents.csv file to that bucket.
+
+Docs for connecting to AWS S3 from a streamlit app running in the streamlit
+cloud: https://docs.streamlit.io/develop/tutorials/databases/aws-s3
+
+My AWS console: 
+https://us-east-2.console.aws.amazon.com/console/home?region=us-east-2
+
+To log into my AWS account, do this in a terminal window:
+aws login
+
+My AWS region is us-east-2
+
