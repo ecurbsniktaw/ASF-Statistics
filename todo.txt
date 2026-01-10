@@ -1,9 +1,40 @@
 To Do for ASF Stats
 ===================
 
-- Deploy 1st version
-  - Push current code to github
-  - Test the deployed version
+- Finalize 1st version
+  
+  - On startup, don't show full listing. Instead, show
+  	detailed about text, explaining where the data came
+  	from, how to use the interactive DataTables output,
+  	etc. Do this as html code, read from a file.
+
+  - Test to see if data files can be read from the 
+    github repo directory (e.g. the base csv file).
+    If so, no need to host data files elsewhere.
+
+    - Looks like the answer is yes: navigate to the
+      data file in the repo, click the "raw" button,
+      and that will give you the url from which the
+      python code can read.
+
+    - Need to run different read code depending on
+      whether running locally or in the streamlit
+      cloud: 
+      	def is_running_on_streamlit_cloud():
+    		return os.environ.get('STREAMLIT_CLOUD') == 'true'
+      Or maybe not... why not read from the repo url while
+      running locally?
+
+  - Add some sort of contact-me feature for people to
+    ask questions, make suggestions, report errors.
+
+  - Refactor read_df_from_csv()
+
+  - Expand README.md
+
+√ Deploy 1st version
+  √ Push current code to github
+  √ Test the deployed version
 
 Changes for next Version:
 
@@ -22,6 +53,8 @@ Changes for next Version:
 - In Authors by month table, make the author column wider.
 
 - Implement the select authors option.
+
+- Consider finding a way to recognize serials as one story.
 
 DONE
 ====
