@@ -273,13 +273,37 @@ def show_stacked_bar_chart():
 #### End of function show_stacked_bar_chart
 
 #-------------------------------------------------------------------
+def plot_one_author(an_author):
+
+	# Pull the stories by the author that was chosen, and count them by year.
+	author_df    = df_all_stories[df_all_stories["Author"].str.contains(an_author, na=False)]
+	num_stories  = len(author_df)
+	story_counts = author_df.groupby('Year').agg(Num_Stories=('Year', 'count')).reset_index()
+
+	year_list  = story_counts['Year'].tolist()
+	count_list = story_counts['Num_Stories'].tolist()
+	new_counts = pd.DataFrame({'Num_Stories': count_list}, index=year_list)
+
+	# Reindex the two column dataframe using all years, filling with
+	# zeros where this author had no stories in that year.
+	all_keys = [1939, 
+			1940, 1941, 1942, 1943, 1944, 1945, 1946, 1947, 1948, 1949, 
+			1950, 1951, 1952, 1953, 1954, 1955, 1956, 1957, 1958, 1959, 
+			1960] 
+	new_counts = new_counts.reindex(all_keys, fill_value=0)
+
+	show_plot_with_dl_button(new_counts, 'line', f"{num_stories} stories by {an_author}")
+
+#### End of function plot_one_author
+
+#-------------------------------------------------------------------
 def show_one_author_plot(trace=False):
+
 	# Pull the authors column, turn it into a unique set of names,
 	# convert that to a python list, and sort that into alpha order.
-	author_list = sorted(set(df_all_stories['Author'].tolist()))
-
 	# Use the sorted unique list of author names to present the user
 	# with a drop down menu: which author should the plot be made for?
+	author_list = sorted(set(df_all_stories['Author'].tolist()))
 	with st.sidebar:
 		author_name = st.selectbox(
 		"pick an author:",
@@ -289,37 +313,24 @@ def show_one_author_plot(trace=False):
 	)
 
 	if author_name:
-
-		# Pull the stories by the author that was chosen, and count them by year.
-		author_df    = df_all_stories[df_all_stories["Author"].str.contains(author_name, na=False)]
-		num_stories  = len(author_df)
-		story_counts = author_df.groupby('Year').agg(Num_Stories=('Year', 'count')).reset_index()
-
-		year_list  = story_counts['Year'].tolist()
-		count_list = story_counts['Num_Stories'].tolist()
-		new_counts = pd.DataFrame({'Num_Stories': count_list}, index=year_list)
-
-		# Reindex the two column dataframe using all years, filling with
-		# zeros where this author had no stories in that year.
-		all_keys = [1939, 
-				1940, 1941, 1942, 1943, 1944, 1945, 1946, 1947, 1948, 1949, 
-				1950, 1951, 1952, 1953, 1954, 1955, 1956, 1957, 1958, 1959, 
-				1960] 
-		new_counts = new_counts.reindex(all_keys, fill_value=0)
-
-		show_plot_with_dl_button(new_counts, 'line', f"{num_stories} stories by {author_name}")
+		plot_one_author(author_name)
 
 	else:
 		message = """
-<center>
-<h4>
-Pick an author from the drop down menu on the left,<br>
-or click on the menu and start typing an author's last name<br>
-in order to find that author in the drop down list.
-</h4>
-</center>
+<h5>
+Pick an author from the menu on the left,
+or click the menu and start typing an author's last name
+to find the author in the list.
+<br>
+For example, this graph shows the number of stories published by Robert Heinlein each year,
+including those published under his pen names: Anson MacDonald and Caleb Saunders
+(each installment of a serial is counted as one story):
+</h5>
 		"""
 		st.markdown(message, unsafe_allow_html=True)
+
+		example = "Heinlein, Robert A."
+		plot_one_author(example)
 
 #### End of function show_one_author_plot
 
@@ -337,29 +348,37 @@ def show_top_20():
 
 #### End of function show_top_20
 
+#-------------------------------------------------------------------
+def show_about():
+
+	num_years   = df_all_stories['Year'].nunique()
+	num_issues  = len(df_all_stories.drop_duplicates(subset=['Year', 'Month']))
+	num_stories = len(df_all_stories)
+	num_authors = df_all_stories['Author'].nunique()
+
+	about = f"""
+	<h5>
+	The golden age of pulp science fiction is generally agreed to have started in the late 1930s
+	when John W. Campbell became editor of the pulp magazine Astounding Science Fiction. There is
+	less agreement as to the end of that era, but this web page uses the July 1939 and September 1960
+	issues of Astounding as the bookends of the golden age.<br>
+	This encompasses {num_stories:,} stories by {num_authors} authors in {num_issues} issues over {num_years} years.
+	</h5>
+	"""
+
+	st.markdown(about, unsafe_allow_html=True)
+
+#### End of function show_top_20
 
 ##==================================================================================
 ##                               M  A  I  N                                       ##
 ##==================================================================================
 
-df_all_stories    = read_df_from_csv("https://brucewatkins.org/sciencefiction/data/astounding_contents.csv")
-author_year_pivot = read_df_from_csv("https://brucewatkins.org/sciencefiction/data/author_story_counts_by_year.csv", True)
+all_stories_csv_github  = "https://raw.githubusercontent.com/ecurbsniktaw/ASF-Statistics/refs/heads/main/data/astounding_contents.csv"
+author_pivot_csv_github = "https://raw.githubusercontent.com/ecurbsniktaw/ASF-Statistics/refs/heads/main/data/author_story_counts_by_year.csv"
 
-num_years   = df_all_stories['Year'].nunique()
-num_issues  = len(df_all_stories.drop_duplicates(subset=['Year', 'Month']))
-num_stories = len(df_all_stories)
-num_authors = df_all_stories['Author'].nunique()
-
-heading = f"""
-<center>
-<h5>
-Astounding Science Fiction<br>
-{num_stories:,} stories by {num_authors} authors in {num_issues} issues over {num_years} years<br>
-from July 1939 to September 1960
-</h5>
-</center>
-"""
-st.markdown(heading, unsafe_allow_html=True)
+df_all_stories    = read_df_from_csv(all_stories_csv_github)
+author_year_pivot = read_df_from_csv(author_pivot_csv_github, True)
 
 #------------------------------------------------
 # SIDEBAR
@@ -407,4 +426,4 @@ if type_display:
 			show_top_20()
 
 else:
-	show_full_listing() # Show full listing when page loads
+	show_about() # Show about info when the page loads

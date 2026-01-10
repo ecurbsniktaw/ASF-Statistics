@@ -8,22 +8,10 @@ To Do for ASF Stats
   	from, how to use the interactive DataTables output,
   	etc. Do this as html code, read from a file.
 
-  - Test to see if data files can be read from the 
-    github repo directory (e.g. the base csv file).
-    If so, no need to host data files elsewhere.
-
-    - Looks like the answer is yes: navigate to the
-      data file in the repo, click the "raw" button,
-      and that will give you the url from which the
-      python code can read.
-
-    - Need to run different read code depending on
-      whether running locally or in the streamlit
-      cloud: 
-      	def is_running_on_streamlit_cloud():
-    		return os.environ.get('STREAMLIT_CLOUD') == 'true'
-      Or maybe not... why not read from the repo url while
-      running locally?
+  - When plot 1 author is chosen, but before an author
+    has been picked, show the existing text, but expand it
+    in general, and in particular, display an example plot,
+    maybe for Heinlein.
 
   - Add some sort of contact-me feature for people to
     ask questions, make suggestions, report errors.
