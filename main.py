@@ -356,12 +356,16 @@ def show_about():
 	num_stories = len(df_all_stories)
 	num_authors = df_all_stories['Author'].nunique()
 
+	styles = "https://raw.githubusercontent.com/ecurbsniktaw/ASF-Statistics/refs/heads/main/styles.css"
+
 	about = f"""
-	<h5>
+	<link rel="stylesheet" type="text/css" href="{styles}">
+	<p class="about">
 	The golden age of pulp science fiction is generally agreed to have started in the late 1930s
 	when John W. Campbell became editor of the pulp magazine Astounding Science Fiction. There is
 	less agreement as to the end of that era, but this web page uses the July 1939 and September 1960
-	issues of Astounding as the bookends of the golden age.<br>
+	issues of Astounding as the bookends of the golden age.
+	</p>
 	This encompasses {num_stories:,} stories by {num_authors} authors in {num_issues} issues over {num_years} years.
 	</h5>
 	"""
