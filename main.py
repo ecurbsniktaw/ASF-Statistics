@@ -356,19 +356,41 @@ def show_about():
 	num_stories = len(df_all_stories)
 	num_authors = df_all_stories['Author'].nunique()
 
-	styles = "https://raw.githubusercontent.com/ecurbsniktaw/ASF-Statistics/refs/heads/main/styles.css"
+	# styles = "https://raw.githubusercontent.com/ecurbsniktaw/ASF-Statistics/refs/heads/main/styles.css"
 
 	about = f"""
-	<link rel="stylesheet" type="text/css" href="{styles}">
-	<h5>The Golden Age</h5>
+	<style>
+		.about {{
+		    font-family: Arial, Helvetica, sans-serif; 
+		    font-size: 3rem;
+		    line-height: 1.5; 
+		    color: #333; 
+		}}
+	</style>
+	<h5>Science Fiction: The Golden Age</h5>
 	<p class="about">
 	The golden age of pulp science fiction is generally agreed to have started in the late 1930s
 	when John W. Campbell became editor of Astounding Science Fiction. There is
 	less agreement as to the end of that era, but this web page uses the July 1939 and September 1960
-	issues of Astounding as the bookends of the golden age.
+	issues of Astounding as bookends for the golden age. 
 	</p>
 	<p class="about">
-	This encompasses {num_stories:,} stories by {num_authors} authors in {num_issues} issues over {num_years} years.
+	The July 1939 issue included both the first published story by
+	A. E. van Vogt, "Black Destroyer", and Isaac Asimov's first appearence in Astounding with "Trends". 
+	Robert Heinlein's first story, "Life-Line", appeared in August, and September saw Theodore Sturgeon's
+	first SF story, "Ether Breather".
+	</p>
+	<p class="about">
+	The data here includes {num_stories:,} stories by {num_authors} authors in {num_issues} issues over {num_years} years.
+	This web page provides various ways to explore and analyze that data.
+	</p>
+	<p class="about">
+	Use the "Output..." menu on the left to choose a data visualization option. Some choices display tables, others 
+	generate a plot or chart. Tables can be sorted by clicking on the heading of any column. The search field at the
+	upper right of tables can be used to filter results. The screenshot below shows 'jenkins' entered into the search 
+	field, resulting in the display of the single story that was published under Murray Leinster's pen name
+	Will F. Jenkins.<br>
+	<img src="data/tablesort.png">
 	</p>
 	"""
 
