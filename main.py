@@ -211,6 +211,12 @@ def show_csv_dl_button(df, dl_file_name):
 
 #-------------------------------------------------------------------
 def show_full_listing():
+
+	title = f"""
+	<h5>Stories Published in Astounding Science Fiction: July 1939 to September 1960</h5>
+	"""
+	st.markdown(title, unsafe_allow_html=True)
+
 	st.set_page_config(layout="wide")
 	heading_list = ['Seq', 'Year', 'Month', 'Title', 'Pub As', 'Author']
 	show_data_table(df_all_stories, heading_list,'1', '25px')
@@ -224,8 +230,13 @@ def show_author_totals():
 	author_counts = df_all_stories.groupby("Author").size().reset_index(name="StoryCount")
 	author_counts.sort_values(by='StoryCount', ascending=False, inplace=True)
 
-	heading_list = ['Author', 'Story Count']
+	title = f"""
+	<h5>Total Number of Stories Published by Each Author</h5>
+	"""
+	st.markdown(title, unsafe_allow_html=True)
+
 	st.set_page_config(layout="centered")
+	heading_list = ['Author', 'Story Count']
 	show_data_table(author_counts, heading_list, '0', '25%')
 
 	show_csv_dl_button(author_counts, 'authorTotals.csv')
@@ -244,6 +255,11 @@ def show_author_by_year():
 			1960] 
 	author_year_pivot = author_year_pivot[new_heads]
 	author_year_pivot = author_year_pivot.sort_values(by='Total', ascending=False)
+
+	title = f"""
+	<h5>Number of Stories Published by Each Author By Year</h5>
+	"""
+	st.markdown(title, unsafe_allow_html=True)
 
 	# Display the table
 	heading_list = ['Author', 'Total', '1939', 
@@ -268,7 +284,12 @@ def show_stacked_bar_chart():
 	top10_authors = top10_authors.drop(top10_authors.columns[0], axis=1)
 	year_author   = top10_authors.T # Transpose so years are rows, authors are columns
 
-	show_plot_with_dl_button(year_author, 'bar', 'Top 10 Authors')
+	title = f"""
+	<h5>Number of Stories Published by the Top 10 Authors Each Year</h5>
+	"""
+	st.markdown(title, unsafe_allow_html=True)
+
+	show_plot_with_dl_button(year_author, 'bar', '')
 
 #### End of function show_stacked_bar_chart
 
@@ -292,7 +313,7 @@ def plot_one_author(an_author):
 			1960] 
 	new_counts = new_counts.reindex(all_keys, fill_value=0)
 
-	show_plot_with_dl_button(new_counts, 'line', f"{num_stories} stories by {an_author}")
+	show_plot_with_dl_button(new_counts, 'line', f'{an_author} Published {num_stories} Stories')
 
 #### End of function plot_one_author
 
@@ -317,16 +338,23 @@ def show_one_author_plot(trace=False):
 
 	else:
 		message = """
-<h5>
-Pick an author from the menu on the left,
+<style>
+	.displayHead {{
+	    font-family: Arial, Helvetica, sans-serif; 
+	    font-size: 24px;
+	    line-height: 1.5; 
+	    color: #333; 
+	}}
+</style>
+<h5>Stories per Year by One Author</h5><p class="displayHead">Pick an author from the menu on the left,
 or click the menu and start typing an author's last name
 to find the author in the list.
-<br>
-For example, this graph shows the number of stories published by Robert Heinlein each year,
-including those published under his pen names: Anson MacDonald and Caleb Saunders
-(each installment of a serial is counted as one story):
-</h5>
-		"""
+Your output will look something like the example below: a graph showing the number of 
+stories published by Robert Heinlein each year, including those published under his 
+pen names: Anson MacDonald and Caleb Saunders (each installment of a serial is counted 
+as one story):
+</p>
+"""
 		st.markdown(message, unsafe_allow_html=True)
 
 		example = "Heinlein, Robert A."
@@ -388,9 +416,12 @@ def show_about():
 	Use the "Output..." menu on the left to choose a data visualization option. Some choices display tables, others 
 	generate a plot or chart. Tables can be sorted by clicking on the heading of any column. The search field at the
 	upper right of tables can be used to filter results. The screenshot below shows 'jenkins' entered into the search 
-	field, resulting in the display of the single story that was published under Murray Leinster's pen name
-	Will F. Jenkins.<br>
-	<img src="data/tablesort.png">
+	field, resulting in the display of the single story that was published as by Will F. Jenkins instead of using his
+	pen name Murray Leinster.
+	.<br>
+	<img 
+	src="https://github.com/ecurbsniktaw/ASF-Statistics/blob/b6d53fb758c9e23429795029b7a6b7c353f8b55c/data/tablesort.png?raw=true"
+	border="1px">
 	</p>
 	"""
 
@@ -414,7 +445,7 @@ author_year_pivot = read_df_from_csv(author_pivot_csv_github, True)
 with st.sidebar:
 	type_display = st.selectbox(
 	"label",
-	("Full listing", 
+	("All stories", 
 	 "Author totals", 
 	 "Author by year",
 	 "Plot: Stacked bar chart",
@@ -432,7 +463,7 @@ if type_display:
 
 	match type_display:
 
-		case 'Full listing':
+		case 'All stories':
 			show_full_listing()
 
 		case 'Author totals':

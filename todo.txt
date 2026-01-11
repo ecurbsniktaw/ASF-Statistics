@@ -1,28 +1,12 @@
 To Do for ASF Stats
 ===================
 
-- Finalize 1st version
-  
-  - On startup, don't show full listing. Instead, show
-  	detailed about text, explaining where the data came
-  	from, how to use the interactive DataTables output,
-  	etc. Do this as html code, read from a file.
+- Add some sort of contact-me feature for people to
+  ask questions, make suggestions, report errors.
 
-  - When plot 1 author is chosen, but before an author
-    has been picked, show the existing text, but expand it
-    in general, and in particular, display an example plot,
-    maybe for Heinlein.
+- Refactor read_df_from_csv()
 
-  - Add some sort of contact-me feature for people to
-    ask questions, make suggestions, report errors.
-
-  - Refactor read_df_from_csv()
-
-  - Expand README.md
-
-√ Deploy 1st version
-  √ Push current code to github
-  √ Test the deployed version
+- Expand README.md
 
 Changes for next Version:
 
@@ -46,6 +30,26 @@ Changes for next Version:
 
 DONE
 ====
+
+√ Add heading to each display option (because there is no
+generic heading being displayed now).
+
+√ In plot-one-author, change the heading text style to the
+same used for the start-of-app about text.
+
+√ On startup, don't show full listing. Instead, show
+	detailed about text, explaining where the data came
+	from, how to use the interactive DataTables output,
+	etc. Do this as html code.
+
+√ When plot 1 author is chosen, but before an author
+has been picked, show the existing text, but expand it
+in general, and in particular, display an example plot,
+maybe for Heinlein.
+
+√ Deploy 1st version
+  √ Push current code to github
+  √ Test the deployed version
 
 √ Read the two csv files from urls instead of from local files
   (and instead of using AWS storage).
