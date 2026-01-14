@@ -143,10 +143,39 @@ def read_df_from_csv(file_path, drop_index=False):
 #### End of function read_df_from_csv
 
 #-------------------------------------------------------------------
-def show_plot_with_dl_button(dataframe, which_type, title, trace=False):
+def show_multiline_plot_with_dl(index_list, value_lists, authors, title):
+#
+# index_list:	Lists of x values, e.g. years.
+# value_lists:	A list of lists, each of which has y values, e.g.
+#				number of stories published that year by this
+#				author.
+# authors:		List of author names.
 
-	if trace:
-		st.dataframe(dataframe)
+	fig, ax = plt.subplots()
+
+	for ndx, value_list in enumerate(value_lists):
+		dataframe = pd.DataFrame(
+		    {
+		        f"{authors[ndx]}": value_list
+		    },
+		    index=index_list,
+		)
+		ax = dataframe.plot(kind='line', ax=ax, marker='.', title=title, grid=True)
+
+	ax.yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
+	ax.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
+	ax.spines['bottom'].set_position(('data', 0))
+
+	plt.tight_layout()
+	st.set_page_config(layout="centered")
+	st.pyplot(fig)
+
+	plt.close()
+
+#### End of function show_multiline_plot_with_dl
+
+#-------------------------------------------------------------------
+def show_plot_with_dl_button(dataframe, which_type, title, trace=False):
 
 	fig, ax = plt.subplots()
 
@@ -159,7 +188,6 @@ def show_plot_with_dl_button(dataframe, which_type, title, trace=False):
 			ax = dataframe.plot(kind=which_type, ax=ax, marker='.', title=title, grid=True)
 			ax.yaxis.set_major_locator(ticker.MaxNLocator(integer=True))
 			ax.xaxis.set_major_locator(ticker.MaxNLocator(integer=True))
-			# ax.spines['left'].set_position(('data', 1939))
 			ax.spines['bottom'].set_position(('data', 0))
 
 		case 'barh':
@@ -364,7 +392,26 @@ as one story):
 
 #-------------------------------------------------------------------
 def show_select_authors():
-	st.write('will show plot select authors')
+	author_list = sorted(set(df_all_stories['Author'].tolist()))
+
+	with st.sidebar:
+		selected_options = st.multiselect(
+		    "Select one or more authors:",
+		    author_list
+		)
+
+	clicked = st.button("Plot the Authors")
+
+	if clicked:
+	    st.write(f"plot for {len(selected_options)} authors will appear")
+
+	    year_list  = [1939, 1940, 1941] 
+	    # year_list = list(range(1939, 1961))
+
+	    count_lists = [[0, 1, 0],[3, 2, 5]]
+	    authors     = selected_options
+	    title = "multiline plot test"
+	    show_multiline_plot_with_dl(year_list, count_lists, authors, title)
 
 #### End of function show_select_authors
 
@@ -384,50 +431,74 @@ def show_about():
 	num_stories = len(df_all_stories)
 	num_authors = df_all_stories['Author'].nunique()
 
-	# styles = "https://raw.githubusercontent.com/ecurbsniktaw/ASF-Statistics/refs/heads/main/styles.css"
-
 	about = f"""
 	<style>
 		.about {{
 		    font-family: Arial, Helvetica, sans-serif; 
-		    font-size: 3rem;
-		    line-height: 1.5; 
-		    color: #333; 
+		    font-size: 1.05rem;
+		    line-height: 1.4; 
+		    color: #333;
+		    margin-top: 0;
+		    margin-bottom: 8px;
+		}}
+		.title {{
+		    font-family: Arial, Helvetica, sans-serif; 
+		    font-size: 1.25rem;
+		    font-weight: bold;
 		}}
 	</style>
-	<h5>Science Fiction: The Golden Age</h5>
-	<p class="about">
+	<div class="title">
+	Science Fiction: The Golden Age
+	</div>
+	<div class="about">
 	The golden age of pulp science fiction is generally agreed to have started in the late 1930s
 	when John W. Campbell became editor of Astounding Science Fiction. There is
 	less agreement as to the end of that era, but this web page uses the July 1939 and September 1960
 	issues of Astounding as bookends for the golden age. 
-	</p>
-	<p class="about">
+	</div>
+	<div class="about">
 	The July 1939 issue included both the first published story by
 	A. E. van Vogt, "Black Destroyer", and Isaac Asimov's first appearence in Astounding with "Trends". 
 	Robert Heinlein's first story, "Life-Line", appeared in August, and September saw Theodore Sturgeon's
 	first SF story, "Ether Breather".
-	</p>
-	<p class="about">
+	</div>
+	<div class="about">
 	The data here includes {num_stories:,} stories by {num_authors} authors in {num_issues} issues over {num_years} years.
 	This web page provides various ways to explore and analyze that data.
-	</p>
-	<p class="about">
-	Use the "Output..." menu on the left to choose a data visualization option. Some choices display tables, others 
-	generate a plot or chart. Tables can be sorted by clicking on the heading of any column. The search field at the
-	upper right of tables can be used to filter results. The screenshot below shows 'jenkins' entered into the search 
-	field, resulting in the display of the single story that was published as by Will F. Jenkins instead of using his
-	pen name Murray Leinster.
-	.<br>
+	</div>
+	<div class="about">
+	Use the "Display..." menu on the left to choose a data visualization option. Some choices display tables, others 
+	generate a plot or chart. Tables can be sorted by clicking on the heading of any column. The search field above
+	a table can be used to filter results. The screenshot below shows 'jenkins' entered into the search 
+	field, resulting in the display of the single story that was published as written by Will F. Jenkins instead of 
+	being published under his pen name Murray Leinster.
+	<br>
 	<img 
 	src="https://github.com/ecurbsniktaw/ASF-Statistics/blob/b6d53fb758c9e23429795029b7a6b7c353f8b55c/data/tablesort.png?raw=true"
 	border="1px">
-	</p>
+	</div>
+	<div class="title">
+	About This Data
+	</div>
+	<div class="about">
+	Thanks to Andrew May for creating a web page listing all the stories published in Astounding Science Fiction 
+	during the golden age. 
+	<a href="https://www.andrew-may.com/asf/list.htm" target="_blank">Here is his web page</a>, and some 
+	<a href="https://www.andrew-may.com/bio.htm" target="_blank">information about Andrew</a>. 
+	</div>
+	<div class="about">
+	The data on Andrew's page was converted into a spreadsheet using python code written jointly by ChatGPT and myself. 
+	Once that spreadsheet was available, ChatGPT assisted in generating code to do some basic data analysis.
+	</div>
+	<div class="about">
+	Creation of the current interactive web page was done without AI assistance, written in python, using the DataTables
+	CSS/Javascript library for interactive HTML tables, and the Streamlit framework to provide web interaction. 
+	</div>
 	"""
 
 	st.markdown(about, unsafe_allow_html=True)
 
-#### End of function show_top_20
+#### End of function show_about
 
 ##==================================================================================
 ##                               M  A  I  N                                       ##
@@ -451,13 +522,16 @@ with st.sidebar:
 	 "Plot: Stacked bar chart",
 	 "Stories/yr, 1 Author",
 	 "Plot: Select authors",
-	 "Plot: Top 20 Authors"),
+	 "Plot: Top 20 Authors",
+	 "About This Site"),
 	 index=None,
 	 label_visibility='hidden',
-	 placeholder="Output...",
+	 placeholder="Display...",
 )
 # End of sidebar
 #------------------------------------------------
+
+st.set_page_config(layout="wide")
 
 if type_display:
 
@@ -483,6 +557,9 @@ if type_display:
 
 		case 'Plot: Top 20 Authors':
 			show_top_20()
+
+		case 'About This Site':
+			show_about()
 
 else:
 	show_about() # Show about info when the page loads

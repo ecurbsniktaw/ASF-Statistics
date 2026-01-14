@@ -1,6 +1,9 @@
 To Do for ASF Stats
 ===================
 
+- Implement the select authors option.
+  Start with the code in ASFcompareAuthors.py
+
 - Add some sort of contact-me feature for people to
   ask questions, make suggestions, report errors.
 
@@ -8,7 +11,25 @@ To Do for ASF Stats
 
 - Expand README.md
 
+-----------------------------------------------------
 Changes for next Version:
+
+ - New displays to add:
+	- All stories published under pen names.
+	- All pen names used.
+	- All one-story authors.
+	- Yr/mo of first appearance of each author (and last?)
+	- Table of authors with data, e.g.:
+	  . birth & death years and places
+	  . brief bio, or link to it
+	  . links to detailed online info (wikipedia, etc.)
+
+- Pen names to handle: 
+	. Wesley Long is a pen name for George O. Smith. 
+  	  There are 6 stories by Long (in 44 and 45).
+  	. One author appears with two different name spellings:
+  	  Coppel, Alfred & Coppel, Alfred, Jr.
+  	. John Pierce; John R. Pierce; J. J. Coupling
 
 - When downloading a spreadsheet, if it has been filtered (e.g. stories
   for just one author are being displayed) download just the filtered rows.
@@ -17,19 +38,17 @@ Changes for next Version:
 
 - Add 1st, last year to heading of plot of stories by one author.
 
-- Consider adding a new display: yr/mo of first appearance
-  of each author (and last?)
-
 - In Author Totals table, make the columns more narrow.
 
 - In Authors by month table, make the author column wider.
 
-- Implement the select authors option.
-
 - Consider finding a way to recognize serials as one story.
 
-DONE
-====
+=============================================================
+						D O N E
+=============================================================
+
+√ Add an "about" option that re-displays the start-up page.
 
 √ Add heading to each display option (because there is no
 generic heading being displayed now).
@@ -106,21 +125,4 @@ maybe for Heinlein.
 		- Plot: Select authors
 		- Plot: Top 20 by year
 	√ Make the tables sortable and searchable
-
-AWS Storage Info
-================
-- Find out how to read in an external csv file from a python script.
-	. I created an AWS S3 bucket named sf-data-files-2026 and uploaded
-	  the astounding_contents.csv file to that bucket.
-
-Docs for connecting to AWS S3 from a streamlit app running in the streamlit
-cloud: https://docs.streamlit.io/develop/tutorials/databases/aws-s3
-
-My AWS console: 
-https://us-east-2.console.aws.amazon.com/console/home?region=us-east-2
-
-To log into my AWS account, do this in a terminal window:
-aws login
-
-My AWS region is us-east-2
 
