@@ -1,18 +1,14 @@
 To Do for ASF Stats
 ===================
 
-- Implement the select authors option.
-  Start with the code in ASFcompareAuthors.py
-
-- Add some sort of contact-me feature for people to
-  ask questions, make suggestions, report errors.
-
-- Refactor read_df_from_csv()
-
 - Expand README.md
 
 -----------------------------------------------------
 Changes for next Version:
+
+ - Refactor read_df_from_csv()
+
+- Check chat for other display option ideas
 
  - New displays to add:
 	- All stories published under pen names.
@@ -44,9 +40,35 @@ Changes for next Version:
 
 - Consider finding a way to recognize serials as one story.
 
+- Add some sort of contact-me feature for people to
+  ask questions, make suggestions, report errors.
+  link to ChatGPT discussion about how to send an email from
+  python/streamlit:
+  https://chatgpt.com/share/696a411f-bed4-8004-9022-ad66ab2b0c65
+  Or maybe use a free mailing list product like this:
+  https://www.mailersend.com/pricing?_gl=1*1ngklod*_up*MQ..*_gs*MQ..&gclid=CjwKCAiA4KfLBhB0EiwAUY7GAVRqKNN5fq_rugOqXRb4TH-bTm6ljac7EcSqx6a9tF80u59abbUYGRoCmDMQAvD_BwE&gbraid=0AAAAAB2b0e8AX0N3pCX56JGIHfO5awN9m
+  Or maybe don't send emails, but just write contact-us data to a db that I manually check?
+  https://www.google.com/search?q=write+to+mysql+from+streamlit&client=safari&hs=qGq9&sca_esv=8d8a6070b8a2d493&sxsrf=ANbL-n4b2HXqvUKXqTnGBW1lg7xPRQ1ssA%3A1768571793868&source=hp&ei=kUNqabj-MtXU5NoPzv7E6A0&iflsig=AFdpzrgAAAAAaWpRoVdBVl2ebD6ADGLqJNExBovraUjs&oq=write+to+mysql+from+stre&gs_lp=Egdnd3Mtd2l6Ihh3cml0ZSB0byBteXNxbCBmcm9tIHN0cmUqAggAMgUQIRigATIFECEYoAEyBRAhGKABMgUQIRigAUifVVAAWNZAcAB4AJABAJgBvQGgAb4TqgEEMTYuOLgBAcgBAPgBAZgCGKAC3BTCAgoQIxiABBgnGIoFwgILEAAYgAQYkQIYigXCAgsQABiABBixAxiDAcICDhAuGIAEGLEDGNEDGMcBwgILEC4YgAQYsQMYgwHCAhEQABiABBixAxiDARiKBRiNBsICBRAAGIAEwgIIEC4YgAQYsQPCAg4QLhiABBixAxiDARiKBcICCBAAGIAEGLEDwgIOEC4YgAQYsQMYxwEYrwHCAgUQLhiABMICDRAAGIAEGLEDGIMBGArCAgsQLhiABBjRAxjHAcICBhAAGBYYHsICCBAAGKIEGIkFwgIIEAAYgAQYogTCAgUQIRirApgDAJIHBTExLjEzoAebrQGyBwUxMS4xM7gH3BTCBwgwLjUuMTQuNcgHc4AIAA&sclient=gws-wiz
+
 =============================================================
 						D O N E
 =============================================================
+
+√ For horizontal bar chart: is now for top 20 authors.
+  Make it variable: choose number, with 20 as the default.
+
+√ Turn grid on for stacked bar chart.
+
+√ Change stacked bar chart: ask for number of authors to
+  show (now uses top 10)
+
+√ Multi author plot:
+	√ create fcn to display dl button
+	√ add download button
+	√ add startup text for multiplot, with 3-author sample output
+
+√ Implement the select authors option.
+  Start with the code in ASFcompareAuthors.py
 
 √ Add an "about" option that re-displays the start-up page.
 
