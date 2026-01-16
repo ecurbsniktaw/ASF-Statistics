@@ -1,8 +1,6 @@
 To Do for ASF Stats
 ===================
 
-- Expand README.md
-
 -----------------------------------------------------
 Changes for next Version:
 
@@ -53,6 +51,8 @@ Changes for next Version:
 =============================================================
 						D O N E
 =============================================================
+
+√ Expand README.md
 
 √ For horizontal bar chart: is now for top 20 authors.
   Make it variable: choose number, with 20 as the default.

@@ -16,5 +16,5 @@ Robert Heinlein's first story, "Life-Line", appeared in August, and September sa
 Theodore Sturgeon's first SF story, "Ether Breather".
 
 The data used here is taken from a web page created by Andrew May:
-https://www.andrew-may.com/asf/list.htm" target="_blank
+https://www.andrew-may.com/asf/list.htm
 
