@@ -1,6 +1,12 @@
 To Do for ASF Stats
 ===================
 
+- Contact Andrew May at admin@Andrew-May.com
+
+- Move images to a directory on my domain:
+  brucewatkins.org/sciencefiction/data/AN196009.thumb.jpg
+  brucewatkins.org/sciencefiction/data/ASF193907.thumb.jpg
+
 -----------------------------------------------------
 Changes for next Version:
 
@@ -24,6 +30,7 @@ Changes for next Version:
   	. One author appears with two different name spellings:
   	  Coppel, Alfred & Coppel, Alfred, Jr.
   	. John Pierce; John R. Pierce; J. J. Coupling
+  	. John Alvarez = Lester del Rey
 
 - When downloading a spreadsheet, if it has been filtered (e.g. stories
   for just one author are being displayed) download just the filtered rows.

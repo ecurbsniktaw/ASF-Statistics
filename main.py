@@ -19,6 +19,7 @@ import matplotlib.pyplot       as plt
 from   matplotlib.backends.backend_pdf import PdfPages
 import matplotlib.ticker       as ticker
 import io
+from io import BytesIO
 import sys
 
 #-------------------------------------------------------------------
@@ -448,22 +449,35 @@ def show_one_author_plot():
 
 	else:
 		message = """
-<style>
-	.displayHead {{
-	    font-family: Arial, Helvetica, sans-serif; 
-	    font-size: 24px;
-	    line-height: 1.5; 
-	    color: #333; 
-	}}
-</style>
-<h5>Stories per Year by One Author</h5><p class="displayHead">Pick an author from the menu on the left,
+	<style>
+		.about {
+		    font-family: Arial, Helvetica, sans-serif; 
+		    font-size: 1.05rem;
+		    line-height: 1.4; 
+		    color: #333;
+		    margin-top: 0;
+		    margin-bottom: 8px;
+		}
+		.title {
+		    font-family: Arial, Helvetica, sans-serif; 
+		    font-size: 1.25rem;
+		    font-weight: bold;
+		}
+	</style>
+
+<div class="title">
+Stories per Year by One Author
+</div>
+
+<div class="about">
+Pick an author from the menu on the left,
 or click the menu and start typing an author's last name
 to find the author in the list.
 Your output will look something like the example below: a graph showing the number of 
 stories published by Robert Heinlein each year, including those published under his 
 pen names: Anson MacDonald and Caleb Saunders (each installment of a serial is counted 
 as one story):
-</p>
+</div>
 """
 		st.markdown(message, unsafe_allow_html=True)
 
@@ -507,22 +521,35 @@ def plot_multiple_authors():
 
 	else:
 		message = """
-<style>
-	.displayHead {{
-	    font-family: Arial, Helvetica, sans-serif; 
-	    font-size: 24px;
-	    line-height: 1.5; 
-	    color: #333; 
-	}}
-</style>
-<h5>Stories per Year by Multiple Authors</h5><p class="displayHead">Pick multiple authors from the menu on the left,
+	<style>
+		.about {
+		    font-family: Arial, Helvetica, sans-serif; 
+		    font-size: 1.05rem;
+		    line-height: 1.4; 
+		    color: #333;
+		    margin-top: 0;
+		    margin-bottom: 8px;
+		}
+		.title {
+		    font-family: Arial, Helvetica, sans-serif; 
+		    font-size: 1.25rem;
+		    font-weight: bold;
+		}
+	</style>
+
+<div class="title">
+Stories per Year by Multiple Authors
+</div>
+
+<div class="about">
+Pick multiple authors from the menu on the left,
 (or click the menu and start typing an author's last name
 to find the author in the list).
 Your output will look something like the example below: a graph showing the number of 
 stories published by Robert Heinlein and Isaac Asimov each year, including those published under  
 pen names: e.g. Anson MacDonald and Caleb Saunders for Heinlein. Note: each installment of a serial is counted 
 as one story):
-</p>
+</div>
 """
 		st.markdown(message, unsafe_allow_html=True)
 
@@ -566,6 +593,14 @@ def show_about():
 	num_stories = len(df_all_stories)
 	num_authors = df_all_stories['Author'].nunique()
 
+	left_fill, img_one, center_fill, img_two, right_fill = st.columns(5)
+
+	with img_one:
+		st.image("https://brucewatkins.org/sciencefiction/data/ASF193907.thumb.jpg", caption='July 1939')
+
+	with img_two:
+		st.image("https://brucewatkins.org/sciencefiction/data/AN196009.thumb.jpg", caption='September 1960')
+
 	about = f"""
 	<style>
 		.about {{
@@ -582,27 +617,32 @@ def show_about():
 		    font-weight: bold;
 		}}
 	</style>
+
 	<div class="title">
 	Science Fiction: The Golden Age
 	</div>
+	
 	<div class="about">
 	The golden age of pulp science fiction is generally agreed to have started in the late 1930s
 	when John W. Campbell became editor of Astounding Science Fiction. There is
 	less agreement as to the end of that era, but this web page uses the July 1939 and September 1960
 	issues of Astounding as bookends for the golden age. 
 	</div>
+	
 	<div class="about">
 	The July 1939 issue included both the first published story by
 	A. E. van Vogt, "Black Destroyer", and Isaac Asimov's first appearence in Astounding with "Trends". 
 	Robert Heinlein's first story, "Life-Line", appeared in August, and September saw Theodore Sturgeon's
 	first SF story, "Ether Breather".
 	</div>
+	
 	<div class="about">
 	The data here includes {num_stories:,} stories by {num_authors} authors in {num_issues} issues over {num_years} years.
 	This web page provides various ways to explore and analyze that data.
 	</div>
+	
 	<div class="about">
-	Use the "Show..." menu on the left to choose a data visualization option. Some choices display tables, others 
+	Use the "Pick a Display / Show..." menu on the left to choose a data visualization option. Some choices display tables, others 
 	generate a plot or chart. Tables can be sorted by clicking on the heading of any column. The search field above
 	a table can be used to filter results. For example, the screenshot below shows 'jenkins' entered into the search 
 	field, resulting in the display of the single story that was published as written by Will F. Jenkins instead of 
@@ -612,24 +652,60 @@ def show_about():
 	src="https://github.com/ecurbsniktaw/ASF-Statistics/blob/b6d53fb758c9e23429795029b7a6b7c353f8b55c/data/tablesort.png?raw=true"
 	border="1px">
 	</div>
+	
 	<div class="title">
 	About This Data
 	</div>
+	
 	<div class="about">
 	Thanks to Andrew May for creating a web page listing all the stories published in Astounding Science Fiction 
 	during the golden age. 
 	<a href="https://www.andrew-may.com/asf/list.htm" target="_blank">Here is his web page</a>, and some 
 	<a href="https://www.andrew-may.com/bio.htm" target="_blank">information about Andrew</a>. 
 	</div>
+	
 	<div class="about">
 	The data on Andrew's page was converted into a spreadsheet using python code written jointly by ChatGPT and myself. 
 	Once that spreadsheet was available, ChatGPT assisted in generating code to do some basic data analysis.
 	</div>
+	
 	<div class="about">
-	Creation of the current interactive web page was done without AI assistance, written in python, using the DataTables
-	CSS/Javascript library for interactive HTML tables, and the Streamlit framework to build this interactive web page. 
+	Creation of the current interactive web page was done without AI assistance, written in python, using the 
+	<a href="https://datatables.net" target="_blank">DataTables</a>
+	CSS/Javascript library for interactive HTML tables, and the 
+	<a href="https://streamlit.io" target="_blank">Streamlit</a>
+	framework to build and host this interactive 
+	web page. 
 	</div>
-	"""
+	
+	<div class="title">
+	Viewing The Issues OnLine
+	</div>
+	<div class="about">
+	Copies of the Golden Age Astounding issues can be viewed at 
+	<a href="https://archive.org/search?query=astounding+science+fiction" target="_blank">
+	The Internet Archive 
+	</a>
+	and at the 
+	<a href="https://www.luminist.org/archives/SF/AST.htm" target="_blank">
+	Luminist organization
+	</a>
+	web site. Access to the issues at the Internet Archive requires a free account.
+	The copies of Astounding on the Luminist site are in PDF format, and can be downloaded.
+	</div>
+
+	<div class="about">
+	The 
+	<a href="https://archive.org/details/astoundingscienc0000unse_q2s0/page/n16/mode/1up" target="_blank">
+	July 1939
+	</a> issue at the Internet Archive
+	is a scan of a facsimile that was published in 
+	1981. It includes a forward by the then current editor of Analog, 
+	Stanley Schmidt, plus articles written by Isaac Asimov and A. E. van Vogt about the stories of theirs 
+	that appeared in the July 1939 issue.
+	</div>
+
+"""
 
 	st.markdown(about, unsafe_allow_html=True)
 
