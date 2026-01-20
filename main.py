@@ -648,9 +648,7 @@ def show_about():
 	field, resulting in the display of the single story that was published as written by Will F. Jenkins instead of 
 	being published under his pen name Murray Leinster.
 	<br>
-	<img 
-	src="https://github.com/ecurbsniktaw/ASF-Statistics/blob/b6d53fb758c9e23429795029b7a6b7c353f8b55c/data/tablesort.png?raw=true"
-	border="1px">
+	<img src="https://brucewatkins.org/sciencefiction/data/tablesort.png" border="1px">
 	</div>
 	
 	<div class="title">
