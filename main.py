@@ -21,6 +21,8 @@ import matplotlib.ticker       as ticker
 import io
 from io import BytesIO
 import sys
+import requests
+import datetime
 
 #-------------------------------------------------------------------
 def list_to_table(heading_list, rows_list):
@@ -303,6 +305,51 @@ def show_full_listing():
 #### End of function show_full_listing
 
 #-------------------------------------------------------------------
+def show_one_month():
+
+	title = f"""
+	<h5>Stories From a Single Issue</h5>
+	"""
+	st.markdown(title, unsafe_allow_html=True)
+
+	in_range = False
+
+	year_col, month_col, go_button_col, fill2, fill3, fill4, fill5 = st.columns(7)
+
+	with year_col:
+	    the_year = st.selectbox("Year", range(1939, 1961), index=None, placeholder="Year...", label_visibility="collapsed")
+
+	with month_col:
+		months = ["1 January", "2 February", "3 March", "4 April", "5 May", "6 June", "7 July", "8 August", "9 September", "10 October", "11 November", "12 December"]
+		the_month = st.selectbox("Month", months, index=None, placeholder="Month...", label_visibility="collapsed")
+
+	with go_button_col:
+		if st.button("Go"):
+			if the_year == None or the_month == None:
+				st.toast("Select a year and month, then click 'Go'")
+			else:
+				# Check for before jul 39 or after sep 60, if so, issue message, 
+				# else generate and display the filtered dataframe.
+				in_range = True
+				if the_year == 1939 and the_month in ["1 January", "2 February", "3 March", "4 April", "5 May", "6 June"]:
+					in_range = False
+					st.toast('No data available before July 1939')
+				if the_year == 1960 and the_month in ["10 October", "11 November", "12 December"]:
+					in_range = False
+					st.toast('No data available after September 1960')
+	if in_range:
+		month_picked = the_month.split()
+		month_picked = month_picked[1]
+		df_one_month = df_all_stories[(df_all_stories["Month"]==month_picked) & (df_all_stories["Year"]==the_year)]
+
+		heading_list = ['Seq', 'Year', 'Month', 'Title', 'Pub As', 'Author']
+		show_data_table(df_one_month, heading_list, '1', '25px')
+
+		show_csv_dl_button(df_one_month, f'stories{month_picked}{the_year}.csv')
+
+#### End of function show_one_month
+
+#-------------------------------------------------------------------
 def show_author_totals():
 ##
 ## Display total number of stories by each author, sorted by largest
@@ -356,6 +403,24 @@ def show_author_by_year():
 	show_csv_dl_button(author_year_pivot, 'storiesByYear.csv')
 
 #### End of function show_author_by_year
+
+#-------------------------------------------------------------------
+def show_pennames():
+
+	rows_not_equal = df_all_stories[df_all_stories['Published_As'] != df_all_stories['Author']]
+	num_stories    = len(rows_not_equal)
+	num_authors    = rows_not_equal['Author'].nunique()
+
+	replacements = [num_authors, num_stories]
+	message = html_from_file("https://brucewatkins.org/sciencefiction/data/pennames.html", replacements)
+	st.markdown(message, unsafe_allow_html=True)
+
+	heading_list = ['Seq', 'Year', 'Month', 'Title', 'Pen Name', 'Author']
+	show_data_table(rows_not_equal, heading_list, '1', '25px')
+
+	show_csv_dl_button(rows_not_equal, 'penNameStories.csv')
+
+#### End of function show_pennames
 
 #-------------------------------------------------------------------
 def show_stacked_bar_chart():
@@ -448,37 +513,7 @@ def show_one_author_plot():
 		plot_one_author(author_name)
 
 	else:
-		message = """
-	<style>
-		.about {
-		    font-family: Arial, Helvetica, sans-serif; 
-		    font-size: 1.05rem;
-		    line-height: 1.4; 
-		    color: #333;
-		    margin-top: 0;
-		    margin-bottom: 8px;
-		}
-		.title {
-		    font-family: Arial, Helvetica, sans-serif; 
-		    font-size: 1.25rem;
-		    font-weight: bold;
-		}
-	</style>
-
-<div class="title">
-Stories per Year by One Author
-</div>
-
-<div class="about">
-Pick an author from the menu on the left,
-or click the menu and start typing an author's last name
-to find the author in the list.
-Your output will look something like the example below: a graph showing the number of 
-stories published by Robert Heinlein each year, including those published under his 
-pen names: Anson MacDonald and Caleb Saunders (each installment of a serial is counted 
-as one story):
-</div>
-"""
+		message = html_from_file("https://brucewatkins.org/sciencefiction/data/singlehelp.html")
 		st.markdown(message, unsafe_allow_html=True)
 
 		example = "Heinlein, Robert A."
@@ -520,37 +555,7 @@ def plot_multiple_authors():
 			show_multiline_plot_with_dl(year_list, count_lists, authors, title)
 
 	else:
-		message = """
-	<style>
-		.about {
-		    font-family: Arial, Helvetica, sans-serif; 
-		    font-size: 1.05rem;
-		    line-height: 1.4; 
-		    color: #333;
-		    margin-top: 0;
-		    margin-bottom: 8px;
-		}
-		.title {
-		    font-family: Arial, Helvetica, sans-serif; 
-		    font-size: 1.25rem;
-		    font-weight: bold;
-		}
-	</style>
-
-<div class="title">
-Stories per Year by Multiple Authors
-</div>
-
-<div class="about">
-Pick multiple authors from the menu on the left,
-(or click the menu and start typing an author's last name
-to find the author in the list).
-Your output will look something like the example below: a graph showing the number of 
-stories published by Robert Heinlein and Isaac Asimov each year, including those published under  
-pen names: e.g. Anson MacDonald and Caleb Saunders for Heinlein. Note: each installment of a serial is counted 
-as one story):
-</div>
-"""
+		message = html_from_file("https://brucewatkins.org/sciencefiction/data/multhelp.html")
 		st.markdown(message, unsafe_allow_html=True)
 
 		authors = []
@@ -584,6 +589,35 @@ def show_top_n():
 #### End of function show_top_20
 
 #-------------------------------------------------------------------
+def html_from_file(url, replacements=[]):
+#
+# Read a block of HTML (or any block of text) from a file (e.g. the 
+# text for the about page), replace any number of {} occurances 
+# with run-time values, e.g. num_stories, and return the resulting 
+# string.
+#
+# This allows for HTML text blocks to be modified without needing to
+# modify any python code.
+#
+	try:
+	    response = requests.get(url)
+	    if response.status_code == 200:
+	        the_html = response.text
+	        
+	    else:
+	        print(f"Failed to retrieve file at [{url}]. Status code: {response.status_code}")
+
+	except requests.exceptions.RequestException as e:
+	    print(f"An error occurred while trying to read [{url}]: {e}")
+
+	if replacements:
+		the_html = the_html.format(*replacements)
+
+	return the_html
+
+#### End of function html_from_file
+
+#-------------------------------------------------------------------
 def show_about():
 ##
 ##
@@ -601,109 +635,8 @@ def show_about():
 	with img_two:
 		st.image("https://brucewatkins.org/sciencefiction/data/AN196009.thumb.jpg", caption='September 1960')
 
-	about = f"""
-	<style>
-		.about {{
-		    font-family: Arial, Helvetica, sans-serif; 
-		    font-size: 1.05rem;
-		    line-height: 1.4; 
-		    color: #333;
-		    margin-top: 0;
-		    margin-bottom: 8px;
-		}}
-		.title {{
-		    font-family: Arial, Helvetica, sans-serif; 
-		    font-size: 1.25rem;
-		    font-weight: bold;
-		}}
-	</style>
-
-	<div class="title">
-	Science Fiction: The Golden Age
-	</div>
-	
-	<div class="about">
-	The golden age of pulp science fiction is generally agreed to have started in the late 1930s
-	when John W. Campbell became editor of Astounding Science Fiction. There is
-	less agreement as to the end of that era, but this web page uses the July 1939 and September 1960
-	issues of Astounding as bookends for the golden age. 
-	</div>
-	
-	<div class="about">
-	The July 1939 issue included both the first published story by
-	A. E. van Vogt, "Black Destroyer", and Isaac Asimov's first appearence in Astounding with "Trends". 
-	Robert Heinlein's first story, "Life-Line", appeared in August, and September saw Theodore Sturgeon's
-	first SF story, "Ether Breather".
-	</div>
-	
-	<div class="about">
-	The data here includes {num_stories:,} stories by {num_authors} authors in {num_issues} issues over {num_years} years.
-	This web page provides various ways to explore and analyze that data.
-	</div>
-	
-	<div class="about">
-	Use the "Pick a Display / Show..." menu on the left to choose a data visualization option. Some choices display tables, others 
-	generate a plot or chart. Tables can be sorted by clicking on the heading of any column. The search field above
-	a table can be used to filter results. For example, the screenshot below shows 'jenkins' entered into the search 
-	field, resulting in the display of the single story that was published as written by Will F. Jenkins instead of 
-	being published under his pen name Murray Leinster.
-	<br>
-	<img src="https://brucewatkins.org/sciencefiction/data/tablesort.png" border="1px">
-	</div>
-	
-	<div class="title">
-	About This Data
-	</div>
-	
-	<div class="about">
-	Thanks to Andrew May for creating a web page listing all the stories published in Astounding Science Fiction 
-	during the golden age. 
-	<a href="https://www.andrew-may.com/asf/list.htm" target="_blank">Here is his web page</a>, and some 
-	<a href="https://www.andrew-may.com/bio.htm" target="_blank">information about Andrew</a>. 
-	</div>
-	
-	<div class="about">
-	The data on Andrew's page was converted into a spreadsheet using python code written jointly by ChatGPT and myself. 
-	Once that spreadsheet was available, ChatGPT assisted in generating code to do some basic data analysis.
-	</div>
-	
-	<div class="about">
-	Creation of the current interactive web page was done without AI assistance, written in python, using the 
-	<a href="https://datatables.net" target="_blank">DataTables</a>
-	CSS/Javascript library for interactive HTML tables, and the 
-	<a href="https://streamlit.io" target="_blank">Streamlit</a>
-	framework to build and host this interactive 
-	web page. 
-	</div>
-	
-	<div class="title">
-	Viewing The Issues OnLine
-	</div>
-	<div class="about">
-	Copies of the Golden Age Astounding issues can be viewed at 
-	<a href="https://archive.org/search?query=astounding+science+fiction" target="_blank">
-	The Internet Archive 
-	</a>
-	and at the 
-	<a href="https://www.luminist.org/archives/SF/AST.htm" target="_blank">
-	Luminist organization
-	</a>
-	web site. Access to the issues at the Internet Archive requires a free account.
-	The copies of Astounding on the Luminist site are in PDF format, and can be downloaded.
-	</div>
-
-	<div class="about">
-	The 
-	<a href="https://archive.org/details/astoundingscienc0000unse_q2s0/page/n16/mode/1up" target="_blank">
-	July 1939
-	</a> issue at the Internet Archive
-	is a scan of a facsimile that was published in 
-	1981. It includes a forward by the then current editor of Analog, 
-	Stanley Schmidt, plus articles written by Isaac Asimov and A. E. van Vogt about the stories of theirs 
-	that appeared in the July 1939 issue.
-	</div>
-
-"""
+	replacements = ["{:,}".format(num_stories), num_authors, num_issues, num_years]
+	about = html_from_file("https://brucewatkins.org/sciencefiction/data/about.html", replacements)
 
 	st.markdown(about, unsafe_allow_html=True)
 
@@ -715,26 +648,37 @@ def show_about():
 
 # Read the two spreadsheets (all stories and author pivot) from this project's github repository
 # and put that data into pandas dataframe objects: global variables.
-all_stories_csv_github  = "https://raw.githubusercontent.com/ecurbsniktaw/ASF-Statistics/refs/heads/main/data/astounding_contents.csv"
-author_pivot_csv_github = "https://raw.githubusercontent.com/ecurbsniktaw/ASF-Statistics/refs/heads/main/data/author_story_counts_by_year.csv"
-df_all_stories    = read_df_from_csv(all_stories_csv_github)
-author_year_pivot = read_df_from_csv(author_pivot_csv_github, True)
+# all_stories_csv_github  = "https://raw.githubusercontent.com/ecurbsniktaw/ASF-Statistics/refs/heads/main/data/astounding_contents.csv"
+# author_pivot_csv_github = "https://raw.githubusercontent.com/ecurbsniktaw/ASF-Statistics/refs/heads/main/data/author_story_counts_by_year.csv"
+# df_all_stories    = read_df_from_csv(all_stories_csv_github)
+# author_year_pivot = read_df_from_csv(author_pivot_csv_github, True)
+
+all_stories_path  = "https://brucewatkins.org/sciencefiction/data/astounding_contents.csv"
+author_pivot_path = "https://brucewatkins.org/sciencefiction/data/author_story_counts_by_year.csv"
+pen_name_path     = "https://brucewatkins.org/sciencefiction/data/pennames-PenNames.csv"
+df_all_stories    = read_df_from_csv(all_stories_path)
+author_year_pivot = read_df_from_csv(author_pivot_path, True)
+df_pen_names      = read_df_from_csv(pen_name_path)
+# st.write(df_pen_names)
 
 # Put a drop down menu into the page's sidebar, listing the options for
-# displaying the story/author data as tables and as plots.
+# displaying the story/author data as tables and as plots (using LaTeX
+# math expression to increase the size of the label of the menu).
 with st.sidebar:
 	type_display = st.selectbox(
-	"Pick a display...",
-	("All stories", 
-	 "Author totals", 
-	 "Author by year",
-	 "Bar chart: Top Authors",
+	r"$\textsf{\normalsize Pick a Display:}$",
+	("All Stories", 
+	 "One Month",
+	 "Author Totals", 
+	 "Author by Year",
+	 "Pen Names",
+	 "Bar Chart: Top Authors",
 	 "Plot: One Author",
-	 "Plot: Multiple authors",
+	 "Plot: Multiple Authors",
 	 "Plot: Top N Authors",
 	 "About This Site"),
 	 index=None,
-	 placeholder="Show...",
+	 placeholder="DISPLAY",
 )
 # End of sidebar
 
@@ -744,22 +688,28 @@ if type_display:
 
 	match type_display:
 
-		case 'All stories':
+		case 'All Stories':
 			show_full_listing()
 
-		case 'Author totals':
+		case 'One Month':
+			show_one_month()
+
+		case 'Author Totals':
 			show_author_totals()
 
-		case 'Author by year':
+		case 'Author by Year':
 			show_author_by_year()
 
-		case 'Bar chart: Top Authors':
+		case 'Pen Names':
+			show_pennames()
+
+		case 'Bar Chart: Top Authors':
 			show_stacked_bar_chart()
 
 		case 'Plot: One Author':
 			show_one_author_plot()
 
-		case 'Plot: Multiple authors':
+		case 'Plot: Multiple Authors':
 			plot_multiple_authors()
 
 		case 'Plot: Top N Authors':
@@ -770,3 +720,4 @@ if type_display:
 
 else:
 	show_about() # Show about info when the page loads
+

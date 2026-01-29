@@ -1,22 +1,27 @@
 To Do for ASF Stats
 ===================
 
-- Contact Andrew May at admin@Andrew-May.com
+- Contact Andrew May at admin@Andrew-May.com, ask for his
+  comments on the app.
 
-- Move images to a directory on my domain:
-  brucewatkins.org/sciencefiction/data/AN196009.thumb.jpg
-  brucewatkins.org/sciencefiction/data/ASF193907.thumb.jpg
+- Add a display: show stories from a single issue
+  √ Choose from (may two - one month, one year) menu, then
+    display the stories in that issue. Or maybe one menu with, e.g.,
+    1939 September
+    1939 October
+    ...
+  - Add heading: Stories From a Single Issue
+  √ Include yr,mo in dl csv file name
 
------------------------------------------------------
-Changes for next Version:
+- Add to ASFcsvFromHtml.py: regenerate the pivot table.
 
- - Refactor read_df_from_csv()
+- Refactor read_df_from_csv()
 
 - Check chat for other display option ideas
+  . The chat now includes the agent's code for showing cumulative
+    number of stories by an author.
 
  - New displays to add:
-	- All stories published under pen names.
-	- All pen names used.
 	- All one-story authors.
 	- Yr/mo of first appearance of each author (and last?)
 	- Table of authors with data, e.g.:
@@ -24,18 +29,8 @@ Changes for next Version:
 	  . brief bio, or link to it
 	  . links to detailed online info (wikipedia, etc.)
 
-- Pen names to handle: 
-	. Wesley Long is a pen name for George O. Smith. 
-  	  There are 6 stories by Long (in 44 and 45).
-  	. One author appears with two different name spellings:
-  	  Coppel, Alfred & Coppel, Alfred, Jr.
-  	. John Pierce; John R. Pierce; J. J. Coupling
-  	. John Alvarez = Lester del Rey
-
 - When downloading a spreadsheet, if it has been filtered (e.g. stories
   for just one author are being displayed) download just the filtered rows.
-
-- Change the stacked bar chart to a line plot (?)
 
 - Add 1st, last year to heading of plot of stories by one author.
 
@@ -58,6 +53,93 @@ Changes for next Version:
 =============================================================
 						D O N E
 =============================================================
+
+ √ Expand the text above the listing of stories published under
+   pen names:
+
+    NN authors published a total of MM stories (shown below) under 
+    pen names. 
+
+    Some authors always wrote using a name different from their own 
+    (e.g. Lester del Rey was really Leonard Knapp), and in those cases 
+    we've decided to say that the commonly known name (e.g. del Rey) is 
+    the author's name, not a pen name.
+
+    This approach to which name is the author's "real" name is reasonable
+    in most cases, but does lead to at least one unusual result: we don't 
+    consider Murray Leinster to be a pen name, but then the one story published 
+    under his real name (Will Jenkins) shows up in the listing of pen name stories.
+
+√ Add display option(s):
+  √ number of stories published under pen names,
+  √ table of stories published under a pen name.
+
+√ Change the way in which author names are handled:
+  √ Instead of ending up with columns PubAs and Author,
+    we want to have Author and WritingAs.
+  √ So no more data in first, last format.
+  √ Author willl be in last, first, with spelling changes 
+    having been applied.
+  x WritingAs will be empty unless the story was 
+    published under a pen name.
+  . This will make it easy to select and display all
+    stories published under pen names.
+
+√ Use the html_from_file function for the help text for
+  single author plot and also for multiple author plot.
+  √ Create singlehelp.html
+  √ Create multhelp.html
+
+√ Change the pen names logic: read from the pen names csv
+
+√ When creating large strings of HTML to display, change the
+  code to read that text from a file. Use the .format() method
+  to substitute run time string values (e.g. number of stories).
+  This way we can change the output text without changing and
+  pushing the code.
+  Use the * operator, e.g.:
+   fruits = ['apple', 'banana', 'cherry']
+   message = "I have a {}, a {}, and a {}.".format(*fruits)
+
+√ Figure out why total # stories by van Vogt has different
+  values locally/in cloud (58/59)
+
+  √ Pen names to handle: 
+	. Wesley Long is a pen name for George O. Smith. 
+  	  There are 6 stories by Long (in 44 and 45).
+  	. One author appears with two different name spellings:
+  	  Coppel, Alfred & Coppel, Alfred, Jr.
+  	. John Pierce; John R. Pierce; J. J. Coupling
+  	. John Alvarez = Lester del Rey
+    . Poul Anderson's pen names
+
+√ Move images to a directory on my domain:
+  https://brucewatkins.org/sciencefiction/data/AN196009.thumb.jpg
+  https://brucewatkins.org/sciencefiction/data/ASF193907.thumb.jpg
+
+√ Create a script to regenerate the all-stories input csv files
+  x Download a copy of A. May's web page, host it on my domain.
+  	x has been downloaded to Documents/programming/afstats/origpage.html
+  	  (download script is grabpage.py in that directory)
+  	x and has been uploaded to 
+  	  https://brucewatkins.org/sciencefiction/data/origpage.html
+
+  √ Create a spreadsheet of pen names, save as csv
+    . building it as pennames.numbers in Documents/programming/afstats
+    
+      NOTE: need to distinguish between pen names and simple replacement
+      of an author's name because of multiple spellings.
+
+      e.g. Fyfe, Horace B. is not a pen name of Fyfe, H. B, it's just
+      a different spelling that needs to be transformed into the 
+      "standard" spelling of that author's name. Should not be considered
+      a pen name.
+
+      So, we need a separate dataframe of pen names, from which we can
+      display "report(s)" about pen names.
+      √ Create a spreadsheet of pen names only as pennames.numbers
+      √ Create a spreadsheet of spelling "corrections" to be applied
+        as spellings.numbers.
 
 √ Expand README.md
 
