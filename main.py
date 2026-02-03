@@ -339,15 +339,83 @@ def show_one_month():
 					st.toast('No data available after September 1960')
 	if in_range:
 		month_picked = the_month.split()
+		month_num    = int(month_picked[0])
 		month_picked = month_picked[1]
-		df_one_month = df_all_stories[(df_all_stories["Month"]==month_picked) & (df_all_stories["Year"]==the_year)]
 
+		with fill2:
+			img_name = thumb_file_name(the_year, month_num)
+			st.image(f"https://brucewatkins.org/sciencefiction/data/thumbs/{img_name}.jpg", caption=f'{month_picked} {the_year}')
+
+		with fill3:
+			st.write(' ')
+			st.write(' ')
+			st.write(' ')
+			cover_name = cover_file_name(the_year, month_num)
+			st.link_button('View Cover', 
+				f'https://brucewatkins.org/sciencefiction/data/covers/{cover_name}.jpg',
+				help='show a larger cover image in a new browser tab')
+
+		with fill4:
+			st.write(' ')
+			st.write(' ')
+			st.write(' ')
+			pdf_name = pdf_file_name(the_year, month_num)
+			st.link_button('View The Issue', 
+				f'https://brucewatkins.org/sciencefiction/data/pdfs/{cover_name}.pdf',
+				help='show a scanned copy of this issue in a new browser tab')
+
+		df_one_month = df_all_stories[(df_all_stories["Month"]==month_picked) & (df_all_stories["Year"]==the_year)]
 		heading_list = ['Seq', 'Year', 'Month', 'Title', 'Pub As', 'Author']
 		show_data_table(df_one_month, heading_list, '1', '25px')
 
 		show_csv_dl_button(df_one_month, f'stories{month_picked}{the_year}.csv')
 
 #### End of function show_one_month
+
+#-------------------------------------------------------------------
+def pdf_file_name(year_num, month_num):
+#
+# year_num:  int year number, e.g. 1939
+# month_num: int month number e.g. 9
+#
+# Returns file name for the scanned pdf copy of this issue, e.g.
+#  AST_1939_09 or AN_1960_02
+#
+	return thumb_file_name(year_num, month_num)
+
+#### End of function thumb_file_name
+
+#-------------------------------------------------------------------
+def cover_file_name(year_num, month_num):
+#
+# year_num:  int year number, e.g. 1939
+# month_num: int month number e.g. 9
+#
+# Returns file name for the full sized cover image, e.g.
+#  AST_1939_09 or AN_1960_02
+#
+	return thumb_file_name(year_num, month_num)
+
+#### End of function thumb_file_name
+
+#-------------------------------------------------------------------
+def thumb_file_name(year_num, month_num):
+#
+# year_num:  int year number, e.g. 1939
+# month_num: int month number e.g. 9
+#
+# Returns file name for the thumbnail cover image, e.g.
+#  AST_1939_09 or AN_1960_02
+#
+	month_str = f'{month_num:02d}'
+	if (year_num == 1960) & (month_str in ['02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12']):
+		abbrev  = 'AN'
+	else:
+		abbrev = 'AST'
+
+	return f'{abbrev}_{year_num}_{month_str}'
+
+#### End of function thumb_file_name
 
 #-------------------------------------------------------------------
 def show_author_totals():
@@ -659,7 +727,6 @@ pen_name_path     = "https://brucewatkins.org/sciencefiction/data/pennames-PenNa
 df_all_stories    = read_df_from_csv(all_stories_path)
 author_year_pivot = read_df_from_csv(author_pivot_path, True)
 df_pen_names      = read_df_from_csv(pen_name_path)
-# st.write(df_pen_names)
 
 # Put a drop down menu into the page's sidebar, listing the options for
 # displaying the story/author data as tables and as plots (using LaTeX

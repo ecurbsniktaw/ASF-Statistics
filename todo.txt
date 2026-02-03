@@ -1,25 +1,25 @@
 To Do for ASF Stats
 ===================
 
+- Add to pen names help text: examples of issues where one author
+  has two stories, one under a pen name.
+
+- Add more pen names, e.g., Philip St. John for Lester del Rey
+
 - Contact Andrew May at admin@Andrew-May.com, ask for his
   comments on the app.
 
-- Add a display: show stories from a single issue
-  √ Choose from (may two - one month, one year) menu, then
-    display the stories in that issue. Or maybe one menu with, e.g.,
-    1939 September
-    1939 October
-    ...
-  - Add heading: Stories From a Single Issue
-  √ Include yr,mo in dl csv file name
-
 - Add to ASFcsvFromHtml.py: regenerate the pivot table.
+
+- Write instructions for generating and uploading a new version
+  of the data (some or all, e.g. could just be updating pennames
+  or might include all the story data).
 
 - Refactor read_df_from_csv()
 
 - Check chat for other display option ideas
   . The chat now includes the agent's code for showing cumulative
-    number of stories by an author.
+    number of stories by an author, try that as a new display option.
 
  - New displays to add:
 	- All one-story authors.
@@ -54,7 +54,66 @@ To Do for ASF Stats
 						D O N E
 =============================================================
 
- √ Expand the text above the listing of stories published under
+√ When a single issue is displayed, provide a link to the pdf 
+  of the issue.
+  . The pdf files are stored at urls like this:
+    https://s3.us-west-1.wasabisys.com/luminist/SF/AST/AST_1946_02.pdf
+    https://s3.us-west-1.wasabisys.com/luminist/SF/AST/AST_1960_05.pdf
+    https://s3.us-west-1.wasabisys.com/luminist/SF/AN/AN_1960_09.pdf
+
+  . Actually, the Mac Preview app does an excellent job of saving
+    a pdf at a reduced size... first couple tried yielded a savings
+    of nearly 50% with no visual degradation.
+
+  1 √ Write a script that downloads all the pdfs in our date range
+  2 √ Write a script that reduces the size of all the downloaded pdfs
+  3 Create a new online subdirectory (pdfs) under the data directory
+  4 ... FTP all the reduced size pdfs to the new sub directory
+  5 √ Add a link (button?) on the one-page listing for downloading
+    that issue's pdf
+  6 √ Add a link (button?) on the one-page listing for showing the
+    full-sized cover page image (in a new browser tab).
+
+√ Provide (where?) a link to view full-sized cover image(s).
+
+  √ The sizes of the downloaded files vary. Choose a standard
+    size that is good for screen viewing, then write a script
+    that resizes them all to that standard size.
+    600px wide looks like a good size
+
+  √ For any cover image that is larger than 600px wide, reduce
+    it to 600px wide, maintaining the ratio.
+    √ put the new versions of the jpg files (with the same names)
+      into a new directory (locally)
+
+  √ Decide if those with width less than 600px should be resized
+    to be 600px wide. YES
+
+  √ Write a script to download all (in our range) full sized
+    cover images.
+
+  . They are at urls like this:
+    https://luminist.org/archives/SF/AST/AST_1939_07_L.jpg
+    https://luminist.org/archives/SF/AN/AN_1960_09_L.jpg
+
+  √ Put them into /data/covers/
+
+√ When a single issue is displayed, show a thumbnail of the cover.
+  √ Grab all the thumbnails and store them in the brucewatkins.org
+    domain. The images are at, for example, these urls:
+    https://luminist.org/archives/SF/AST/AST_1939_08.jpg
+    so the file names are ASF_yyyy_mm.jpg
+
+ √ Add a display: show stories from a single issue
+  √ Choose from (may two - one month, one year) menu, then
+    display the stories in that issue. Or maybe one menu with, e.g.,
+    1939 September
+    1939 October
+    ...
+  √ Add heading: Stories From a Single Issue
+  √ Include yr,mo in dl csv file name
+
+√ Expand the text above the listing of stories published under
    pen names:
 
     NN authors published a total of MM stories (shown below) under 
