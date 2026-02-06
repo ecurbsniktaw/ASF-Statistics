@@ -377,10 +377,6 @@ def show_one_month():
 			st.write(' ')
 			st.write(' ')
 			st.write(' ')
-			# pdf_name = pdf_file_name(the_year, month_num)
-			# st.link_button('View The Issue', 
-			# 	f'https://brucewatkins.org/sciencefiction/data/pdfs/{cover_name}.pdf',
-			# 	help='show a scanned copy of this issue in a new browser tab')
 			st.link_button('View The Issue', 
 				pdf_file_name(the_year, month_num),
 				help='show a scanned copy of this issue in a new browser tab')
