@@ -6,6 +6,8 @@ To Do for ASF Stats
 
 - Add more pen names, e.g., Philip St. John for Lester del Rey
 
+- Investigate using the pen names data from ISFDB
+
 - Contact Andrew May at admin@Andrew-May.com, ask for his
   comments on the app.
 
@@ -53,6 +55,10 @@ To Do for ASF Stats
 =============================================================
 						D O N E
 =============================================================
+
+√ For pdfs:
+  √ If file exists on brucewatkins.org, use it
+    √ else use the luminist url
 
 √ When a single issue is displayed, provide a link to the pdf 
   of the issue.

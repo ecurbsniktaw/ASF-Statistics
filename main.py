@@ -305,6 +305,24 @@ def show_full_listing():
 #### End of function show_full_listing
 
 #-------------------------------------------------------------------
+def url_file_exists(url):
+##
+## Checks if a file exists at the given URL by making a HEAD request.
+##
+    try:
+        response = requests.head(url, allow_redirects=True, timeout=5)
+        if 200 <= response.status_code < 300:
+            return True
+        else:
+            return False
+            
+    except requests.exceptions.RequestException as e:
+        print(f"An error occurred while connecting to {url}: {e}")
+        return False
+
+#### End of function url_file_exists
+
+#-------------------------------------------------------------------
 def show_one_month():
 
 	title = f"""
@@ -359,9 +377,12 @@ def show_one_month():
 			st.write(' ')
 			st.write(' ')
 			st.write(' ')
-			pdf_name = pdf_file_name(the_year, month_num)
+			# pdf_name = pdf_file_name(the_year, month_num)
+			# st.link_button('View The Issue', 
+			# 	f'https://brucewatkins.org/sciencefiction/data/pdfs/{cover_name}.pdf',
+			# 	help='show a scanned copy of this issue in a new browser tab')
 			st.link_button('View The Issue', 
-				f'https://brucewatkins.org/sciencefiction/data/pdfs/{cover_name}.pdf',
+				pdf_file_name(the_year, month_num),
 				help='show a scanned copy of this issue in a new browser tab')
 
 		df_one_month = df_all_stories[(df_all_stories["Month"]==month_picked) & (df_all_stories["Year"]==the_year)]
@@ -378,10 +399,23 @@ def pdf_file_name(year_num, month_num):
 # year_num:  int year number, e.g. 1939
 # month_num: int month number e.g. 9
 #
-# Returns file name for the scanned pdf copy of this issue, e.g.
-#  AST_1939_09 or AN_1960_02
+# Returns url for the scanned pdf copy of this issue, e.g.
+#   brucewatkins.org/sciencefiction/data/pdfs/AST_1939_09
+# if we've moved a copy to the brucewatkins.org domain, 
+# otherwise returns the url at the luminist archive, e.g.
+#   s3.us-west-1.wasabisys.com/luminist/SF/AST/AST_1946_02.pdf
 #
-	return thumb_file_name(year_num, month_num)
+	file_name = thumb_file_name(year_num, month_num)
+
+	bw_url = f'https://brucewatkins.org/sciencefiction/data/pdfs/{file_name}.pdf'
+
+	if url_file_exists(bw_url):
+		rslt = bw_url
+	else:
+		abbrev = file_name.split('_')[0]
+		rslt = f'https://s3.us-west-1.wasabisys.com/luminist/SF/{abbrev}/{file_name}.pdf'
+
+	return rslt
 
 #### End of function thumb_file_name
 
